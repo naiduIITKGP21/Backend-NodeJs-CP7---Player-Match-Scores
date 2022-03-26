@@ -61,3 +61,18 @@ WHERE player_id = ${playerId};`;
   await db.run(updatePlayerQuery);
   response.send("Player Details Updated");
 });
+
+//API 4: Returns the match details of a specific match
+app.get("/matches/:matchId/", async (request, response) => {
+  const { matchId } = request.params;
+  const getMatchDetailsQuery = `SELECT * FROM match_details;`;
+  const matchDetails = await db.get(getMatchDetailsQuery);
+  const { match, year } = matchDetails;
+  response.send({
+    matchId: matchId,
+    match: match,
+    year: year,
+  });
+});
+
+//API 5: Returns a list of all the matches of a player
