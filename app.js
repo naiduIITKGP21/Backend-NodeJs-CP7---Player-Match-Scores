@@ -24,6 +24,7 @@ const initializeDBAndServer = async () => {
 
 initializeDBAndServer();
 
+//API 1: Returns a list of all the players in the player table
 app.get("/players/", async (request, response) => {
   const getAllPlayersQuery = `SELECT * FROM player_details;`;
   const allPlayersArray = await db.all(getAllPlayersQuery);
@@ -35,4 +36,15 @@ app.get("/players/", async (request, response) => {
       };
     })
   );
+});
+
+//API 2:Returns a specific player based on the player ID
+app.get("/players/:playerId/", async (request, response) => {
+  const { playerId } = request.params;
+  const getPlayerQuery = `SELECT * FROM player_details WHERE player_id = ${playerId};`;
+  const playerDetails = await db.get(getPlayerQuery);
+  response.send({
+    playerId: playerDetails.player_id,
+    playerName: playerDetails.player_name,
+  });
 });
