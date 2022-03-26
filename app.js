@@ -48,3 +48,16 @@ app.get("/players/:playerId/", async (request, response) => {
     playerName: playerDetails.player_name,
   });
 });
+
+//API 3: Updates the details of a specific player based on the player ID
+app.put("/players/:playerId/", async (request, response) => {
+  const { playerId } = request.params;
+  const { playerName } = request.body;
+  const updatePlayerQuery = `
+UPDATE player_details
+SET
+player_name = "${playerName}"
+WHERE player_id = ${playerId};`;
+  await db.run(updatePlayerQuery);
+  response.send("Player Details Updated");
+});
