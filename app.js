@@ -109,3 +109,20 @@ WHERE player_match_score.match_id = ${matchId};`;
     }))
   );
 });
+
+//API 7: Returns the statistics of the total score, fours, sixes of a specific player based on the player ID
+app.get("/players/:playerId/playerScores", async (request, response) => {
+  const { playerId } = request.params;
+  const playerStatsQuery = `SELECT player_name, SUM(score) AS totalScore, sum(fours) AS totalFours,
+SUM(sixes) AS totalSixes FROM player_details 
+ INNER JOIN  player_match_score ON player_match_score.player_id = player_details.player_id
+ WHERE player_details.player_id = ${playerId};`;
+  const playerStats = await db.get(playerStatsQuery);
+  response.send({
+    playerId: playerId,
+    playerName: playerStats.player_name,
+    totalScore: playerStats.totalScore,
+    totalFours: playerStats.totalFours,
+    totalSixes: playerStats.totalSixes,
+  });
+});
