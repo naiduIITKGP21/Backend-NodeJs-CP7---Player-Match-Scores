@@ -13,3 +13,6 @@ Content-Type: application/json
 ###
 
 GET http://localhost:3000/matches/1
+###
+
+GET http://localhost:3000/players/2/matches

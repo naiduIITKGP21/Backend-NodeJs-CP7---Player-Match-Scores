@@ -76,3 +76,19 @@ app.get("/matches/:matchId/", async (request, response) => {
 });
 
 //API 5: Returns a list of all the matches of a player
+app.get("/players/:playerId/matches", async (request, response) => {
+  const { playerId } = request.params;
+  const getPlayerMatchesQuery = `
+  SELECT * FROM player_match_score 
+  INNER JOIN match_details
+ON player_match_score.match_id = match_details.match_id
+WHERE player_id = ${playerId};`;
+  const playerMatchesArray = await db.all(getPlayerMatchesQuery);
+  response.send(
+    playerMatchesArray.map((eachMatch) => ({
+      matchId: eachMatch.match_id,
+      match: eachMatch.match,
+      year: eachMatch.year,
+    }))
+  );
+});
