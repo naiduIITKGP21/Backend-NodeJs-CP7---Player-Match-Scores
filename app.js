@@ -92,3 +92,20 @@ WHERE player_id = ${playerId};`;
     }))
   );
 });
+
+//API 6: Returns a list of players of a specific match
+app.get("/matches/:matchId/players", async (request, response) => {
+  const { matchId } = request.params;
+  const getMatchPlayersQuery = `
+  SELECT * FROM player_match_score 
+  INNER JOIN player_details
+ON player_match_score.player_id = player_details.player_id
+WHERE player_match_score.match_id = ${matchId};`;
+  const matchPlayersArray = await db.all(getMatchPlayersQuery);
+  response.send(
+    matchPlayersArray.map((eachMatch) => ({
+      playerId: eachMatch.player_id,
+      playerName: eachMatch.player_name,
+    }))
+  );
+});
