@@ -65,11 +65,11 @@ WHERE player_id = ${playerId};`;
 //API 4: Returns the match details of a specific match
 app.get("/matches/:matchId/", async (request, response) => {
   const { matchId } = request.params;
-  const getMatchDetailsQuery = `SELECT * FROM match_details;`;
+  const getMatchDetailsQuery = `SELECT * FROM match_details WHERE match_id = ${matchId};`;
   const matchDetails = await db.get(getMatchDetailsQuery);
-  const { match, year } = matchDetails;
+  const { match_id, match, year } = matchDetails;
   response.send({
-    matchId: matchId,
+    matchId: match_id,
     match: match,
     year: year,
   });
@@ -113,16 +113,17 @@ WHERE player_match_score.match_id = ${matchId};`;
 //API 7: Returns the statistics of the total score, fours, sixes of a specific player based on the player ID
 app.get("/players/:playerId/playerScores", async (request, response) => {
   const { playerId } = request.params;
-  const playerStatsQuery = `SELECT player_name, SUM(score) AS totalScore, sum(fours) AS totalFours,
+  const playerStatsQuery = `SELECT player_details.player_id AS player_id, player_name, SUM(score) AS totalScore, sum(fours) AS totalFours,
 SUM(sixes) AS totalSixes FROM player_details 
  INNER JOIN  player_match_score ON player_match_score.player_id = player_details.player_id
  WHERE player_details.player_id = ${playerId};`;
   const playerStats = await db.get(playerStatsQuery);
   response.send({
-    playerId: playerId,
+    playerId: playerStats.player_id,
     playerName: playerStats.player_name,
     totalScore: playerStats.totalScore,
     totalFours: playerStats.totalFours,
     totalSixes: playerStats.totalSixes,
   });
 });
+module.exports = app;
