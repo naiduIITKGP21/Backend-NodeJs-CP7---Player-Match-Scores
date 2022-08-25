@@ -10,5 +10,11 @@
         "nodemon": "2.0.7",
         "sqlite": "4.0.19",
         "sqlite3": "5.0.2"
+    },
+    "engines":{
+     "node": "16.15.1"
+    },
+    "scripts": {
+        "start": "nodemon app.js"
     }
 }
